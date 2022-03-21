@@ -1,16 +1,53 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+graph = {}
+graph["start"] = {}
+graph["start"]["a"] = 6
+graph["start"]["b"] = 2
+graph["a"] = {}
+graph["a"]["fin"] = 1
+graph["b"] = {}
+graph["b"]["a"] = 3
+graph["b"]["fin"] = 5
+graph["fin"] = {}
+
+# словарь стоймости
+infinity = float("inf")
+costs = {}
+costs["a"] = 6
+costs["b"] = 2
+costs["fin"] = infinity
+
+#Словарь хеш-таблицы родителей
+parents = {}
+parents["a"] = "start"
+parents["b"] = "start"
+parents["fin"] = None
+
+#Массив прохождения узлов
+processed = []
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def find_lowest_coast(costs):
+    lowest_cost = float("inf") # вес
+    lowest_cost_node = None #Буква (узел)
+    for node in costs:
+        cost = costs[node]
+        if cost < lowest_cost and node not in processed: #поиск меньшего значения и проверка уникальности узла
+            lowest_cost = cost
+            lowest_cost_node = node
+    return lowest_cost_node
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+node = find_lowest_coast(costs)
+
+while node is not None:
+    cost = costs[node]
+    for elem in graph[node]:
+        new_cost = cost + graph[node][elem]
+        if costs[elem] > new_cost:
+            costs[elem] = new_cost
+            parents[elem] = node
+    processed.append(node)
+    node = find_lowest_coast(costs)
+
+print(costs)
